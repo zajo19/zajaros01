@@ -1,68 +1,82 @@
 <?php
+require_once "connect.php";
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "northwindmysql";
+// požiadavka 01
+echo "<h1>požiadavka 01</h1>";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Kontrola spojenia
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Funkcia na načítanie údajov z tabuľky a vygenerovanie HTML tabuľky
-function fetch_table_data($conn, $table_name) {
-    $sql = "SELECT * FROM $table_name";
-    $result = $conn->query($sql);
-    
-    if ($result->num_rows > 0) {
-        // Vygenerovanie HTML tabuľky
-        $table_html = "<table border='1'><tr>";
-        // Hlavičky tabuľky
-        while ($field_info = $result->fetch_field()) {
-            $table_html .= "<th>{$field_info->name}</th>";
-        }
-        $table_html .= "</tr>";
-        
-        // Dáta tabuľky
-        while($row = $result->fetch_assoc()) {
-            $table_html .= "<tr>";
-            foreach($row as $value) {
-                $table_html .= "<td>{$value}</td>";
-            }
-            $table_html .= "</tr>";
-        }
-        $table_html .= "</table>";
-    } else {
-        $table_html = "No records found in $table_name.";
+echo "<h2>Zákazníci</h2>";
+$sql = "SELECT * FROM customers";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<pre>" . print_r($row, true) . "</pre>";
     }
-    
-    return $table_html;
 }
 
-// Načítanie údajov z jednotlivých tabuliek
-$zakaznici_table = fetch_table_data($conn, "Zákazníci");
-$objednavky_table = fetch_table_data($conn, "Objednávky");
-$dodavatelia_table = fetch_table_data($conn, "Dodávatelia");
+echo "<h2>Objednávky</h2>";
+$sql = "SELECT * FROM orders";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<pre>" . print_r($row, true) . "</pre>";
+    }
+}
 
-// Uzavretie spojenia
+echo "<h2>Dodávatelia</h2>";
+$sql = "SELECT * FROM suppliers";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<pre>" . print_r($row, true) . "</pre>";
+    }
+}
+
+// požiadavka 02
+echo "<h1>požiadavka 02</h1>";
+$sql = "SELECT * FROM customers ORDER BY country, companyName";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<pre>" . print_r($row, true) . "</pre>";
+    }
+}
+
+// požiadavka 03
+echo "<h1>požiadavka 03</h1>";
+$sql = "SELECT * FROM orders ORDER BY orderDate";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<pre>" . print_r($row, true) . "</pre>";
+    }
+}
+
+// požiadavka 04
+echo "<h1>požiadavka 04</h1>";
+$sql = "SELECT COUNT(*) AS count FROM orders WHERE YEAR(orderDate) = 1997";
+$result = $conn->query($sql);
+$row = $result->fetch_assoc();
+echo "Počet objednávok v roku 1997: " . $row['count'];
+
+// požiadavka 05
+echo "<h1>požiadavka 05</h1>";
+$sql = "SELECT contactName FROM customers WHERE contactTitle LIKE '%Manager%' ORDER BY contactName";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo $row['contactName'] . "<br>";
+    }
+}
+
+// požiadavka 06
+echo "<h1>požiadavka 06</h1>";
+$sql = "SELECT * FROM orders WHERE orderDate = '1997-05-19'";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<pre>" . print_r($row, true) . "</pre>";
+    }
+}
+
 $conn->close();
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Požiadavka 01</title>
-</head>
-<body>
-    <h1>Požiadavka 01</h1>
-    <h2>Zákazníci</h2>
-    <?php echo $zakaznici_table; ?>
-    <h2>Objednávky</h2>
-    <?php echo $objednavky_table; ?>
-    <h2>Dodávatelia</h2>
-    <?php echo $dodavatelia_table; ?>
-</body>
-</html>
