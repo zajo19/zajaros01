@@ -24,55 +24,56 @@ function display_table($result, $table_name) {
     }
 }
 
-// Požiadavka 01
-echo "<h1>požiadavka 01</h1>";
-$sql = "SELECT * FROM Zákazníci";
+// Request 01
+echo "<h1>Request 01</h1>";
+$sql = "SELECT * FROM Customers";
 $result = $conn->query($sql);
-display_table($result, "Zákazníci");
+display_table($result, "Customers");
 
-$sql = "SELECT * FROM Objednávky";
+$sql = "SELECT * FROM Orders";
 $result = $conn->query($sql);
-display_table($result, "Objednávky");
+display_table($result, "Orders");
 
-$sql = "SELECT * FROM Dodávatelia";
+$sql = "SELECT * FROM Suppliers";
 $result = $conn->query($sql);
-display_table($result, "Dodávatelia");
+display_table($result, "Suppliers");
 
-// Požiadavka 02
-echo "<h1>požiadavka 02</h1>";
-$sql = "SELECT * FROM Zákazníci ORDER BY krajina, názov";
+// Request 02
+echo "<h1>Request 02</h1>";
+$sql = "SELECT * FROM Customers ORDER BY country, name";
 $result = $conn->query($sql);
-display_table($result, "Zákazníci");
+display_table($result, "Customers");
 
-// Požiadavka 03
-echo "<h1>požiadavka 03</h1>";
-$sql = "SELECT * FROM Objednávky ORDER BY dátum";
+// Request 03
+echo "<h1>Request 03</h1>";
+$sql = "SELECT * FROM Orders ORDER BY date";
 $result = $conn->query($sql);
-display_table($result, "Objednávky");
+display_table($result, "Orders");
 
-// Požiadavka 04
-echo "<h1>požiadavka 04</h1>";
-$sql = "SELECT COUNT(*) as pocet FROM Objednávky WHERE YEAR(dátum) = 1995";
+// Request 04
+echo "<h1>Request 04</h1>";
+$sql = "SELECT COUNT(*) as count FROM Orders WHERE YEAR(date) = 1995";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    echo "Počet objednávok v roku 1995: " . $row['pocet'] . "<br>";
+    echo "Number of orders in 1995: " . $row['count'] . "<br>";
 } else {
-    echo "0 results in table Objednávky for year 1995.<br>";
+    echo "0 results in table Orders for year 1995.<br>";
 }
 
-// Požiadavka 05
-echo "<h1>požiadavka 05</h1>";
-$sql = "SELECT meno FROM KontaktnéOsoby WHERE pozícia = 'manažér' ORDER BY meno";
+// Request 05
+echo "<h1>Request 05</h1>";
+$sql = "SELECT name FROM Contacts WHERE position = 'manager' ORDER BY name";
 $result = $conn->query($sql);
-display_table($result, "KontaktnéOsoby");
+display_table($result, "Contacts");
 
-// Požiadavka 06
-echo "<h1>požiadavka 06</h1>";
-$sql = "SELECT * FROM Objednávky WHERE dátum = '1995-09-28'";
+// Request 06
+echo "<h1>Request 06</h1>";
+$sql = "SELECT * FROM Orders WHERE date = '1995-09-28'";
 $result = $conn->query($sql);
-display_table($result, "Objednávky");
+display_table($result, "Orders");
 
 $conn->close();
 ?>
+
 
