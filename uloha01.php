@@ -53,10 +53,10 @@ if ($result->num_rows > 0) {
 
 // požiadavka 04
 echo "<h1>požiadavka 04</h1>";
-$sql = "SELECT COUNT(*) AS count FROM orders WHERE YEAR(orderDate) = 1997";
+$sql = "SELECT COUNT(*) AS count FROM orders WHERE YEAR(orderDate) = 1995";
 $result = $conn->query($sql);
 $row = $result->fetch_assoc();
-echo "Počet objednávok v roku 1997: " . $row['count'];
+echo "Počet objednávok v roku 1995: " . $row['count'];
 
 // požiadavka 05
 echo "<h1>požiadavka 05</h1>";
@@ -70,7 +70,7 @@ if ($result->num_rows > 0) {
 
 // požiadavka 06
 echo "<h1>požiadavka 06</h1>";
-$sql = "SELECT * FROM orders WHERE orderDate = '1997-05-19'";
+$sql = "SELECT * FROM orders WHERE orderDate = '1995-09-28'";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
