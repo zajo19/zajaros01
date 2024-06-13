@@ -1,78 +1,83 @@
 <?php
-include 'connect.php';
+// Pripojenie k databáze
+include('connect.php');
 
-function display_table($result, $table_name) {
+// Funkcia na vykonanie SQL dotazu a získanie výsledkov
+function executeQuery($conn, $query) {
+    $result = $conn->query($query);
     if ($result->num_rows > 0) {
-        echo "<table border='1'><tr>";
-        // Fetch field names
-        $field_info = $result->fetch_fields();
-        foreach ($field_info as $field) {
-            echo "<th>{$field->name}</th>";
-        }
-        echo "</tr>";
-        // Fetch data
-        while($row = $result->fetch_assoc()) {
-            echo "<tr>";
-            foreach($row as $data) {
-                echo "<td>{$data}</td>";
-            }
-            echo "</tr>";
-        }
-        echo "</table><br>";
+        return $result;
     } else {
-        echo "0 results in table {$table_name}.<br>";
+        return null;
     }
 }
 
-// Request 01
-echo "<h1>Request 01</h1>";
-$sql = "SELECT * FROM Customers";
-$result = $conn->query($sql);
-display_table($result, "Customers");
-
-$sql = "SELECT * FROM Orders";
-$result = $conn->query($sql);
-display_table($result, "Orders");
-
-$sql = "SELECT * FROM Suppliers";
-$result = $conn->query($sql);
-display_table($result, "Suppliers");
-
-// Request 02
-echo "<h1>Request 02</h1>";
-$sql = "SELECT * FROM Customers ORDER BY country, name";
-$result = $conn->query($sql);
-display_table($result, "Customers");
-
-// Request 03
-echo "<h1>Request 03</h1>";
-$sql = "SELECT * FROM Orders ORDER BY date";
-$result = $conn->query($sql);
-display_table($result, "Orders");
-
-// Request 04
-echo "<h1>Request 04</h1>";
-$sql = "SELECT COUNT(*) as count FROM Orders WHERE YEAR(date) = 1995";
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    echo "Number of orders in 1995: " . $row['count'] . "<br>";
+echo "<h1>požiadavka 01</h1>";
+$query = "SELECT * FROM Zákazníci UNION SELECT * FROM Objednávky UNION SELECT * FROM Dodávatelia";
+$result = executeQuery($conn, $query);
+if ($result) {
+    while($row = $result->fetch_assoc()) {
+        echo implode(", ", $row) . "<br>";
+    }
 } else {
-    echo "0 results in table Orders for year 1995.<br>";
+    echo "Žiadne výsledky.";
 }
 
-// Request 05
-echo "<h1>Request 05</h1>";
-$sql = "SELECT name FROM Contacts WHERE position = 'manager' ORDER BY name";
-$result = $conn->query($sql);
-display_table($result, "Contacts");
+echo "<h1>požiadavka 02</h1>";
+$query = "SELECT * FROM Zákazníci ORDER BY krajina, názov";
+$result = executeQuery($conn, $query);
+if ($result) {
+    while($row = $result->fetch_assoc()) {
+        echo implode(", ", $row) . "<br>";
+    }
+} else {
+    echo "Žiadne výsledky.";
+}
 
-// Request 06
-echo "<h1>Request 06</h1>";
-$sql = "SELECT * FROM Orders WHERE date = '1995-09-28'";
-$result = $conn->query($sql);
-display_table($result, "Orders");
+echo "<h1>požiadavka 03</h1>";
+$query = "SELECT * FROM Objednávky ORDER BY dátum";
+$result = executeQuery($conn, $query);
+if ($result) {
+    while($row = $result->fetch_assoc()) {
+        echo implode(", ", $row) . "<br>";
+    }
+} else {
+    echo "Žiadne výsledky.";
+}
 
+echo "<h1>požiadavka 04</h1>";
+$query = "SELECT COUNT(*) AS pocet FROM Objednávky WHERE YEAR(dátum) = 1995";
+$result = executeQuery($conn, $query);
+if ($result) {
+    $row = $result->fetch_assoc();
+    echo "Počet objednávok v roku 1995: " . $row['pocet'];
+} else {
+    echo "Žiadne výsledky.";
+}
+
+echo "<h1>požiadavka 05</h1>";
+$query = "SELECT meno FROM Zákazníci WHERE pozícia = 'manažér' ORDER BY meno";
+$result = executeQuery($conn, $query);
+if ($result) {
+    while($row = $result->fetch_assoc()) {
+        echo $row['meno'] . "<br>";
+    }
+} else {
+    echo "Žiadne výsledky.";
+}
+
+echo "<h1>požiadavka 06</h1>";
+$query = "SELECT * FROM Objednávky WHERE dátum = '1995-09-28'";
+$result = executeQuery($conn, $query);
+if ($result) {
+    while($row = $result->fetch_assoc()) {
+        echo implode(", ", $row) . "<br>";
+    }
+} else {
+    echo "Žiadne výsledky.";
+}
+
+// Zatvorenie pripojenia k databáze
 $conn->close();
 ?>
 
